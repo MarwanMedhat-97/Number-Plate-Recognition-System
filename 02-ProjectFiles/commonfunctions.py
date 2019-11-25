@@ -6,7 +6,7 @@ import numpy as np
 from skimage.exposure import histogram
 from matplotlib.pyplot import bar
 from skimage.color import rgb2gray,rgb2hsv
-
+from skimage.filters import threshold_otsu
 # Convolution:
 from scipy.signal import convolve2d
 from scipy import fftpack
