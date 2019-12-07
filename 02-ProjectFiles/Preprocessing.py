@@ -65,12 +65,12 @@ def extractImages(pathIn):
     success = True
     while success:
         # save a frame for every second
-        vidcap.set(cv2.CAP_PROP_POS_MSEC, (count*1000))
+        vidcap.set(cv2.CAP_PROP_POS_MSEC, (count * 1000))
         success, image = vidcap.read()
         print('Read a new frame: ', success)
         image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
-        cv2.imwrite("../03-Dataset/frames/"+"frame%d.jpg" %
-                    count, image)     # save frame as JPEG file
+        cv2.imwrite("../03-Dataset/frames/" + "frame%d.jpg" %
+                    count, image)  # save frame as JPEG file
         count = count + 1
 
 
@@ -103,24 +103,49 @@ def Harris(img):
                 maxi[0] = i - wx
                 maxi[1] = j - wy
     # imag[maxi[0]:maxi[0]+wx,maxi[1]:maxi[1]+wy,:] = [0, 0, 255]
-    cv2.rectangle(imag, (maxi[1], maxi[0]),
-                  (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
-    imag1[(dst > 0.1 * dst.max())] = [0, 0, 255]
-    imag2[(dst > 0.1 * dst.max())] = [0, 0, 255]
-    print("elmax: ", max, maxi)
-    return imag[maxi[0]:maxi[0]+wx,maxi[1]:maxi[1]+wy]
+    # cv2.rectangle(imag, (maxi[1], maxi[0]),(maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
+    ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
+    show_images([ret])
+    imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
+    start, end = 1, 1
+    print(imageret.shape)
+    starti,endi=1,1
+
+    for i in range(imageret.shape[1] - 5):
+        if np.average((imageret[int(0.2 * imageret.shape[0]):int(0.6 * imageret.shape[0]), i:i + 4])) > 100:
+            start = i
+            break
+    for i in range(imageret.shape[1] - 6, 4, -1):
+        if np.average((imageret[int(0.2 * imageret.shape[0]):int(0.6 * imageret.shape[0]), i:i + 4])) > 100:
+            end = i
+            break
+    filtered = imageret[:, start:end]
+
+    for i in range(filtered.shape[1] - 3):
+        if np.average((filtered[i:i + 3, :])) > 120:
+            starti = i
+            break
+
+    for i in range(filtered.shape[0] - 3, 0, -1):
+        if np.average((filtered[i:i + 3, :])) > 120:
+            endi = i
+            break
+    filtered=ret[starti:endi, start:end]
+    print(starti,endi)
+
+    return filtered
 
 
 img = io.imread("lol.jpg")
 x1 = Harris(img)
-show_images([img, x1])
+show_images([x1])
 
 img = io.imread("lol2.jpg")
 x1 = Harris(img)
-show_images([img, x1])
+show_images([x1])
 
 img = io.imread("lol3.jpg")
 x1 = Harris(img)
-show_images([img, x1])
+show_images([x1])
 
 # x= cv2.equalizeHist(x)
