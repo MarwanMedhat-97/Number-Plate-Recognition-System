@@ -55,9 +55,22 @@ def MorhOperations(img):
     x = cv2.morphologyEx(x, cv2.MORPH_OPEN, kernel=SE2, iterations=1)
     x = cv2.morphologyEx(x, cv2.MORPH_OPEN, kernel=SE3, iterations=1)
     return x
+	
+def extractImages(pathIn):
+    count = 0
+    vidcap = cv2.VideoCapture(pathIn)
+    success,image = vidcap.read()
+    success = True
+    while success:
+      vidcap.set(cv2.CAP_PROP_POS_MSEC,(count*1000))    # save a frame for every second
+      success,image = vidcap.read()
+      print ('Read a new frame: ', success)
+	  image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+      cv2.imwrite("../03-Dataset/frames/"+"frame%d.jpg" % count, image)     # save frame as JPEG file
+      count = count + 1
 
-
-img = io.imread("img.jpg")
+extractImages("03-Dataset/car6.mp4")
+img = io.imread("../03-Dataset/frames/frame0.jpg")
 x1 = SobelFilter(img)
 print(np.min(x1), np.max(x1))
 f, thresh = cv2.threshold(x1, thresh=1.2, maxval=255, type=cv2.THRESH_BINARY)
