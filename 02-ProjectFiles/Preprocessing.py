@@ -108,13 +108,19 @@ def Harris(img):
     imag1[(dst > 0.1 * dst.max())] = [0, 0, 255]
     imag2[(dst > 0.1 * dst.max())] = [0, 0, 255]
     print("elmax: ", max, maxi)
-    show_images([img, imag2, imag])
+    return imag[maxi[0]:maxi[0]+wx,maxi[1]:maxi[1]+wy]
 
 
 img = io.imread("lol.jpg")
 x1 = Harris(img)
+show_images([img, x1])
+
 img = io.imread("lol2.jpg")
 x1 = Harris(img)
+show_images([img, x1])
+
 img = io.imread("lol3.jpg")
 x1 = Harris(img)
+show_images([img, x1])
+
 # x= cv2.equalizeHist(x)
