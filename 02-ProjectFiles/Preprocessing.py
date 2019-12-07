@@ -63,21 +63,29 @@ def extractImages(pathIn):
     vidcap = cv2.VideoCapture(pathIn)
     success, image = vidcap.read()
     success = True
+    ListFrames = []
     while success:
         # save a frame for every second
         vidcap.set(cv2.CAP_PROP_POS_MSEC, (count * 1000))
         success, image = vidcap.read()
-        print('Read a new frame: ', success)
+        #   print('Read a new frame: ', success)
+        if success == 0:
+            break
         image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
-        cv2.imwrite("../03-Dataset/frames/" + "frame%d.jpg" %
-                    count, image)  # save frame as JPEG file
+
+        #   cv2.imwrite("../03-Dataset/frames/"+"frame%d.jpg" %
+        #          count, image)     # save frame as JPEG file
+        ListFrames.append(image)
         count = count + 1
+    return ListFrames
 
 
 def Harris(img):
+    #Preprocessing on frame=>
     image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-
     sat = cv2.medianBlur(image, ksize=3)
+    #----------------------------------------------------------------------------------------
+
     dst = cv2.cornerHarris(sat, 20, 5, 0.12)
     # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
@@ -93,6 +101,7 @@ def Harris(img):
     maxi = [0, 0]
     wx = int(arr.shape[0] / 10.5)
     wy = int(arr.shape[1] / 3)
+    ListPlates = []
     for i in range(arr.shape[0] - 1, 0, -int(wx / 3)):  # tool
         if (i < int(arr.shape[0] / 2)):
             break
@@ -102,14 +111,15 @@ def Harris(img):
                 max = np.sum(arr[i - wx:i, j - wy:j])
                 maxi[0] = i - wx
                 maxi[1] = j - wy
-    # imag[maxi[0]:maxi[0]+wx,maxi[1]:maxi[1]+wy,:] = [0, 0, 255]
     # cv2.rectangle(imag, (maxi[1], maxi[0]),(maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
+
+
     ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
     show_images([ret])
     imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
     start, end = 1, 1
-    print(imageret.shape)
-    starti,endi=1,1
+#print(imageret.shape)
+    starti, endi = 1, 1
 
     for i in range(imageret.shape[1] - 5):
         if np.average((imageret[int(0.2 * imageret.shape[0]):int(0.6 * imageret.shape[0]), i:i + 4])) > 100:
@@ -130,22 +140,16 @@ def Harris(img):
         if np.average((filtered[i:i + 3, :])) > 120:
             endi = i
             break
-    filtered=ret[starti:endi, start:end]
-    print(starti,endi)
+    filtered = ret[starti:endi, start:end]
+    print(starti, endi)
+    show_images([img,filtered],["orginal","Suppose to be a plate ?"])
+    return filtered,0
 
-    return filtered
-
-
-img = io.imread("lol.jpg")
-x1 = Harris(img)
-show_images([x1])
-
-img = io.imread("lol2.jpg")
-x1 = Harris(img)
-show_images([x1])
-
-img = io.imread("lol3.jpg")
-x1 = Harris(img)
-show_images([x1])
-
+# extractImages("../03-Dataset/car6.mp4")
+# img = io.imread("lol.jpg")
+# x1 = Harris(img)
+# img = io.imread("lol2.jpg")
+# x1 = Harris(img)
+# img = io.imread("lol3.jpg")
+# x1 = Harris(img)
 # x= cv2.equalizeHist(x)

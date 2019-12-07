@@ -1,5 +1,6 @@
 import cv2
 import glob
+from skimage.morphology import binary_erosion, binary_dilation, binary_closing, skeletonize, thin
 import skimage.io as io
 import matplotlib.pyplot as plt
 import numpy as np
