@@ -57,12 +57,46 @@ def MorhOperations(img):
     return x
 
 
-img = io.imread("img.jpg")
-x1 = SobelFilter(img)
-print(np.min(x1), np.max(x1))
-f, thresh = cv2.threshold(x1, thresh=1.2, maxval=255, type=cv2.THRESH_BINARY)
+def Harris(img):
+    image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
+    sat = cv2.medianBlur(image, ksize=3)
+    dst = cv2.cornerHarris(sat, 20, 5, 0.12)
+    # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
+    dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
+                           iterations=3)
+
+    imag = np.copy(img)
+    imag1 = np.copy(img)
+
+    imag2 = np.copy(img)
+    arr = ((dst > 0.1 * dst.max()) & (image > 150))
+
+    max = -1
+    maxi = [0, 0]
+    wx = int(arr.shape[0] / 10.5)
+    wy = int(arr.shape[1] / 3)
+    for i in range(arr.shape[0] - 1, 0, -int(wx / 3)):  # tool
+        if (i < int(arr.shape[0] / 2)):
+            break
+        for j in range(arr.shape[1] - 1, 0 + wy, -int(wy / 3)):  # 3ard
+            # print(np.sum(arr[i-wx:i,j-wy:j]))
+            if (np.sum(arr[i - wx:i, j - wy:j])) > max:
+                max = np.sum(arr[i - wx:i, j - wy:j])
+                maxi[0] = i - wx
+                maxi[1] = j - wy
+    # imag[maxi[0]:maxi[0]+wx,maxi[1]:maxi[1]+wy,:] = [0, 0, 255]
+    cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
+    imag1[(dst > 0.1 * dst.max())] = [0, 0, 255]
+    imag2[(dst > 0.1 * dst.max())] = [0, 0, 255]
+    print("elmax: ", max, maxi)
+    show_images([img, imag2, imag])
+
+
+img = io.imread("lol.jpg")
+x1 = Harris(img)
+img = io.imread("lol2.jpg")
+x1 = Harris(img)
+img = io.imread("lol3.jpg")
+x1 = Harris(img)
 # x= cv2.equalizeHist(x)
-
-x = MorhOperations(thresh)
-show_images([img, x])
