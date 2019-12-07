@@ -11,7 +11,8 @@ def show_images(images, titles=None):
     # images[0] will be drawn with the title titles[0] if exists
     # You aren't required to understand this function, use it as-is.
     n_ims = len(images)
-    if titles is None: titles = ['(%d)' % i for i in range(1, n_ims + 1)]
+    if titles is None:
+        titles = ['(%d)' % i for i in range(1, n_ims + 1)]
     fig = plt.figure()
     n = 1
     for image, title in zip(images, titles):
@@ -57,6 +58,22 @@ def MorhOperations(img):
     return x
 
 
+def extractImages(pathIn):
+    count = 0
+    vidcap = cv2.VideoCapture(pathIn)
+    success, image = vidcap.read()
+    success = True
+    while success:
+        # save a frame for every second
+        vidcap.set(cv2.CAP_PROP_POS_MSEC, (count*1000))
+        success, image = vidcap.read()
+        print('Read a new frame: ', success)
+        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        cv2.imwrite("../03-Dataset/frames/"+"frame%d.jpg" %
+                    count, image)     # save frame as JPEG file
+        count = count + 1
+
+
 def Harris(img):
     image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
@@ -86,7 +103,8 @@ def Harris(img):
                 maxi[0] = i - wx
                 maxi[1] = j - wy
     # imag[maxi[0]:maxi[0]+wx,maxi[1]:maxi[1]+wy,:] = [0, 0, 255]
-    cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
+    cv2.rectangle(imag, (maxi[1], maxi[0]),
+                  (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
     imag1[(dst > 0.1 * dst.max())] = [0, 0, 255]
     imag2[(dst > 0.1 * dst.max())] = [0, 0, 255]
     print("elmax: ", max, maxi)
