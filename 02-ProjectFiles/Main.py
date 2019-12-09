@@ -2,23 +2,26 @@ from Preprocessing import *
 from Character_Segementation import *
 from Character_Recognition import *
 
+# TODO: 1- CharacterSegementation by connected components  (Least Significatnt) to get more accurcy  ,2-Char_Recognition get an impleneted module   ,3- implement harris manually and handle the corner case
+
+
+
 ShowSteps = 0
 FrameList = []
-FrameList = extractImages("../03-Dataset/car6.mp4")
+FrameList = extractImages("../03-Dataset/VideoCar.mp4")
 for Frame in FrameList:
     PlateList = []
-    TEST_img = io.imread("../03-Dataset/lol3.jpg")
+    #TEST_img = io.imread("../03-Dataset/xx.png")
     my_cornerHarris(Frame)
     PLATE_img, PlateInFrame = Harris(Frame)
-    # SE=np.ones((3,3))
-    # IMG=median(IMG,SE)
     CharacterList = []
-    show_images([PLATE_img], ["The plate ?"])
+    show_images([PLATE_img,PlateInFrame], ["The plate ?","Img with red rectangle ?"])
     # Characters Segementation =>
     CharacterList = Segement_Char(PLATE_img)
     PlateNumber = ""
     # Characters Recognition =>
     for Char in CharacterList:
+        #Char=1-Char
         PlateNumber += Character_Recognition(Char)
     print(PlateNumber)
 

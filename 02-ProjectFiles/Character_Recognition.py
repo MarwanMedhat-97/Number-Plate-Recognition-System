@@ -24,7 +24,7 @@ def Template_matching(img,template):      # matching 2 images
     #template = thin(template, 5)
     #print(img.shape,template.shape)
    # patch = img[i - 1:i + 2, j - 1:j + 2]
-    show_images([template,img], ["TemplateImage", "Test_img"])
+   # show_images([template,img], ["TemplateImage", "Test_img"])
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
             #patch1 = img[i-2 : i+3 , j-2 : j+3]
@@ -36,7 +36,7 @@ def Template_matching(img,template):      # matching 2 images
 
 def Character_Recognition(test_img):     # take the test image and compare it with all characters and letters and
     num_of_matched_pixels = []           # then return the most character having common features with it
-    test_img = preprocess(test_img)
+#    test_img = preprocess(test_img)
     test_img[test_img > 0] = 1
     #test_img = np.resize(test_img, (300, 250))    # the window size will change depending on the images size
     for filename in sorted(glob.glob('Character_images/alphabet/*.PNG')):    # after making character segmentation
@@ -55,10 +55,10 @@ def Character_Recognition(test_img):     # take the test image and compare it wi
         #print(matched_pixels)
     num_of_matched_pixels = np.array(num_of_matched_pixels)
     index = np.argmax(num_of_matched_pixels)
-    print(num_of_matched_pixels)
+   # print(num_of_matched_pixels)
     #print("class name is : ", get_class_name(index))
     return get_class_name(index)
 
-img=io.imread('Character_images/K.png')
-str=Character_Recognition(img)
-print(str)
+#img=io.imread('Character_images/K.png')
+#str=Character_Recognition(img)
+#print(str)
