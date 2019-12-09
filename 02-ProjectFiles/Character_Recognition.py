@@ -29,7 +29,7 @@ def Template_matching(img,template):      # matching 2 images
         for j in range(img.shape[1]):
             #patch1 = img[i-2 : i+3 , j-2 : j+3]
             #patch2 = template[i - 2: i + 3, j - 2: j + 3]
-            if(img[i,j]==template[i,j] and img[i,j]!=0):  # don`t count the background
+            if(img[i,j]==template[i,j] ):  # don`t count the background
                 count+=1
     return count
 
@@ -59,6 +59,6 @@ def Character_Recognition(test_img):     # take the test image and compare it wi
     #print("class name is : ", get_class_name(index))
     return get_class_name(index)
 
-#img=io.imread('Character_images/M.png')
-#str=Character_Recognition(img)
-#print(str)
+img=io.imread('Character_images/K.png')
+str=Character_Recognition(img)
+print(str)
