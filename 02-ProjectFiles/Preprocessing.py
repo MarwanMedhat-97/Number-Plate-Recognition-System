@@ -4,7 +4,8 @@ import skimage.io as io
 from skimage.color import rgb2gray
 from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
-
+from scipy import signal as sig
+from scipy.ndimage import gaussian_filter
 
 def show_images(images, titles=None):
     # This function is used to show image(s) with titles by sending an array of images and an array of associated titles.
@@ -80,13 +81,26 @@ def extractImages(pathIn):
     return ListFrames
 
 
-def Harris(img):
-    #Preprocessing on frame=>
-    image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    sat = cv2.medianBlur(image, ksize=3)
-    #----------------------------------------------------------------------------------------
+def GammaCorrection(image, c, gamma):
+    #   image = rgb2gray(image)
+    imageGamma = np.array(image)
+    image = c * np.power(imageGamma, gamma)
+    return image
 
+
+def Harris(img):
+    # imgg=GammaCorrection(img,1,2)
+    # Preprocessing on frame=>
+    image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    # image = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    sat = cv2.medianBlur(image, ksize=3)
+
+    # sat=GammaCorrection(image,1,10)
+    show_images([sat])
+    # ----------------------------------------------------------------------------------------
+    # print(imgg.shape)
     dst = cv2.cornerHarris(sat, 20, 5, 0.12)
+    show_images([dst])
     # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
                            iterations=3)
@@ -111,14 +125,22 @@ def Harris(img):
                 max = np.sum(arr[i - wx:i, j - wy:j])
                 maxi[0] = i - wx
                 maxi[1] = j - wy
-    # cv2.rectangle(imag, (maxi[1], maxi[0]),(maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
+                ListPlates.append([i - wx, j - wy, max])
 
+    print(max, "weeeeeeeeee")
+    if max == 0:
+        return img, 0
+    cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
 
+    ListPlates.reverse()
+    cv2.rectangle(imag, (ListPlates[1][0], ListPlates[1][1]), (ListPlates[1][0] + wy, ListPlates[1][1] + wx),
+                  (255, 0, 0), 2)
     ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
-    show_images([ret])
+    show_images([ret, imag])
+    return ret, imag
     imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
     start, end = 1, 1
-#print(imageret.shape)
+    # print(imageret.shape)
     starti, endi = 1, 1
 
     for i in range(imageret.shape[1] - 5):
@@ -142,8 +164,9 @@ def Harris(img):
             break
     filtered = ret[starti:endi, start:end]
     print(starti, endi)
-    show_images([img,filtered],["orginal","Suppose to be a plate ?"])
-    return filtered,0
+    #    show_images([img,filtered],["orginal","Suppose to be a plate ?"])
+    return filtered, 0
+
 
 # extractImages("../03-Dataset/car6.mp4")
 # img = io.imread("lol.jpg")
@@ -153,3 +176,46 @@ def Harris(img):
 # img = io.imread("lol3.jpg")
 # x1 = Harris(img)
 # x= cv2.equalizeHist(x)
+def my_cornerHarris(Orignal_img):
+    img = rgb2gray(Orignal_img)
+    # Sobel Algorithm =>
+    fx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    fy = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
+
+    I_x = sig.convolve2d(img, fx, mode='same')
+    I_y = sig.convolve2d(img, fy, mode='same')
+    Ixx = gaussian_filter(I_x ** 2, sigma=2)
+    Ixy = gaussian_filter(I_y * I_x, sigma=2)
+    Iyy = gaussian_filter(I_y ** 2, sigma=2)
+    k = 0.05
+    detA = Ixx * Iyy - Ixy ** 2
+    traceA = Ixx + Iyy
+    harris_response = detA - k * traceA ** 2
+    show_images([harris_response])
+    offset=0
+    height=3
+    width=3
+
+
+    for y in range(offset, height - offset):
+        for x in range(offset, width - offset):
+            Sxx = np.sum(Ixx[y - offset:y + 1 + offset, x - offset:x + 1 + offset])
+            Syy = np.sum(Iyy[y - offset:y + 1 + offset, x - offset:x + 1 + offset])
+            Sxy = np.sum(Ixy[y - offset:y + 1 + offset, x - offset:x + 1 + offset])
+    det = (Sxx * Syy) - (Sxy ** 2)
+    trace = Sxx + Syy
+    r = det - k * (trace ** 2)
+    img_copy_for_corners = np.copy(Orignal_img)
+    img_copy_for_edges = np.copy(Orignal_img)
+    for rowindex, response in enumerate(harris_response):
+        for colindex, r in enumerate(response):
+            if r > 0:
+                # this is a corner
+                img_copy_for_corners[rowindex, colindex] = [255, 0, 0]
+            elif r < 0:
+                # this is an edge
+                img_copy_for_edges[rowindex, colindex] = [0, 255, 0]
+#    corners = corner_peaks(harris_response)
+    fig, ax = plt.subplots()
+    ax.imshow(img_copy_for_corners, interpolation='nearest', cmap=plt.cm.gray)
+    #ax.plot(corners[:, 1], corners[:, 0], '.r', markersize=3)

@@ -3,19 +3,29 @@ from collections import namedtuple
 from skimage.filters import threshold_local
 from skimage import segmentation
 from skimage import measure
-#from imutils import perspective
+# from imutils import perspective
 import numpy as np
-#import imutils
+# import imutils
 import cv2
+
+
 def Segement_Char(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Get The Thresholding TODO:get another
+    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    gray = cv2.medianBlur(gray, 3)
+   # blur = cv2.GaussianBlur(img, (5, 5), 0)
+    #ret3, th3 = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     GlobalThresh = threshold_otsu(gray)
+
     ThreshImage = np.copy(gray)
     ThreshImage[gray >= GlobalThresh] = 1
     ThreshImage[gray < GlobalThresh] = 0
     Parition = np.copy(ThreshImage)
-    Binary = np.copy(Parition)
+    Binary = np.copy(img)
+    Parition = cv2.medianBlur(Parition, 3)
+    show_images([Parition], ["Char Seweqweqwegementation FOR THIS PLATE"])
     # Parition[Parition.shape[0]-10:Parition.shape[0]]=np.zeros(Parition.shape[1])
     Height = np.shape(Parition)[0]
     Wdith = np.shape(Parition)[1]
@@ -25,10 +35,32 @@ def Segement_Char(img):
     # for h in Height:
     # ASSUMITON => Background is 0 and Characters  are equal to 1
     LastCut = 0
-   # Parition = skeletonize(1 - Parition)
-   # Parition = 1 - Parition
+    #Parition = skeletonize(1 - Parition)
+    #Parition = 1 - Parition
     show_images([Parition], ["Char Segementation FOR THIS PLATE"])
-    #GETING MAX transition row
+    #-----------------------------------------------------------------------------
+
+    MAX = 0
+    Base_INDEX = 0
+    for i in range(Parition.shape[0]):
+        max = np.sum(Parition[i])
+        if max >= \
+                MAX:
+            MAX = max
+            Base_INDEX = i
+    ThreshImage[Base_INDEX,:]=np.ones(ThreshImage.shape[1])
+    print(Base_INDEX)
+
+
+
+
+
+
+
+
+
+
+    # GETING MAX transition row
     MaxTransition = 0
     MaxTransitionIndex = 0
     for i in range(0, Height, 1):  # loop on Each row
@@ -44,19 +76,22 @@ def Segement_Char(img):
         if CurrTransitionRow >= MaxTransition:
             MaxTransitionIndex = i
             MaxTransition = CurrTransitionRow
-    flag=0
-    Parition=1-Parition
-    Dummy=0
+    flag = 0
+    Parition = 1 - Parition
+    Dummy = 0
     for w in range(Wdith):
-        if np.sum(Parition[MaxTransitionIndex, w]) ==0 and flag == 0:  # a Char is found
+        if np.sum(Parition[MaxTransitionIndex, w]) == 0 and flag == 0:  # a Char is found
             Start = w
             flag = 1  # loop until the charcter end and found the end of first char
         elif np.sum(Parition[MaxTransitionIndex, w]) == 1 and flag == 1:  # char is ended
             End = w
-            flag=0
+            flag = 0
             ThereIsGap = False
+
+         #   if abs(End-Start) <20:
+           #     continue # garbage
             for k in range(abs(Start - End) + 1):
-                CurrVP = np.sum(Parition[MaxTransitionIndex-10:MaxTransitionIndex+10, Start + k])
+                CurrVP = np.sum(Parition[MaxTransitionIndex - 10:MaxTransitionIndex + 10, Start + k])
                 # print(CurrVP,"wee",StartIndex,EndIndex)
                 if CurrVP == 0:
                     print("Detect Gap in the Word ")
@@ -66,23 +101,21 @@ def Segement_Char(img):
                     break
             if ThereIsGap:
                 ThreshImage[:, CutIndex] = np.zeros(Height)
-                Window = np.copy(ThreshImage[MaxTransitionIndex-10:MaxTransitionIndex+10, Dummy: CutIndex])
-                Dummy=CutIndex
-                if Dummy ==0:
-                    Dummy=CutIndex
+                Window = np.copy(ThreshImage[MaxTransitionIndex - 40:MaxTransitionIndex + 40, Dummy: CutIndex])
+                Dummy = CutIndex
+                if Dummy == 0:
+                    Dummy = CutIndex
                     continue
-                Dummy=CutIndex
+                Dummy = CutIndex
                 CharacterList.append(Window)
             else:
                 continue
 
-            # if abs(End-Start) <20:
-            #    continue # garbage
-         #   CutIndex = int((Start + End) / 2)
+        #   CutIndex = int((Start + End) / 2)
 
-         #   flag = 0  # Find the next
+        #   flag = 0  # Find the next
     #            LastCut=CutIndex
-    Window = np.copy(ThreshImage[MaxTransitionIndex-10:MaxTransitionIndex+10, Dummy: ])
+    Window = np.copy(Parition[MaxTransitionIndex - 40:MaxTransitionIndex + 40, Dummy:])
     CharacterList.append(Window)
     show_images([ThreshImage], ["Plate With Cut Segementation"])
     for CharImage in CharacterList:
@@ -97,8 +130,8 @@ def Segement_Char_2(img):
     thresh = cv2.bitwise_not(thresh)
 
     # resize the license plate region to a canonical size
-#    plate = cv2.resize(img, width=400)
- #   thresh = cv2.resize(thresh, width=400)
+    #    plate = cv2.resize(img, width=400)
+    #   thresh = cv2.resize(thresh, width=400)
     cv2.imshow("Thresh", thresh)
 
     labels = measure.label(thresh, neighbors=8, background=0)
@@ -113,7 +146,7 @@ def Segement_Char_2(img):
         labelMask = np.zeros(thresh.shape, dtype="uint8")
         labelMask[labels == label] = 255
         cnts = cv2.findContours(labelMask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-#        cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+    #        cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 
     if len(cnts) > 0:
         # grab the largest contour which corresponds to the component in the mask, then
@@ -139,12 +172,13 @@ def Segement_Char_2(img):
             hull = cv2.convexHull(c)
             cv2.drawContours(charCandidates, [hull], -1, 255, -1)
 
-# img = io.imread("Untitled.png")
-#  img = Preprocess(img)
+#img = io.imread("Untitled.png")
+#img = Preprocess(img)
 
-# List=[]
-# List =Segement_Char(img)
-# str=""
-# for img in List:
-#    str=str+(Character_Recognition(img))
-# print (str)
+#List=[]
+#List =Segement_Char(img)
+#str=""
+#for img in List:
+ #str=str+(Character_Recognition(img))
+
+#print (str)
