@@ -8,11 +8,11 @@ from Character_Recognition import *
 
 ShowSteps = 0
 FrameList = []
-FrameList = extractImages("../03-Dataset/VideoCar.mp4")
+FrameList = extractImages("../03-Dataset/video12.mp4"
+                          )
 for Frame in FrameList:
     PlateList = []
     #TEST_img = io.imread("../03-Dataset/xx.png")
-    my_cornerHarris(Frame)
     PLATE_img, PlateInFrame = Harris(Frame)
     CharacterList = []
     show_images([PLATE_img,PlateInFrame], ["The plate ?","Img with red rectangle ?"])
