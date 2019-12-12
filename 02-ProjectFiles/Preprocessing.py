@@ -132,28 +132,31 @@ def Harris(img):
     start, end = 1, 1
     # print(imageret.shape)
     starti, endi = 1, 1
-
-    for i in range(imageret.shape[1] - 5):
-        if np.average((imageret[int(0.2 * imageret.shape[0]):int(0.6 * imageret.shape[0]), i:i + 4])) > 100:
+    show_images([imageret],["lol"])
+    for i in range(imageret.shape[1] - int(0.15*imageret.shape[1])-1):
+        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]), i:i + int(0.15*imageret.shape[1])])) > 100:
             start = i
             break
-    for i in range(imageret.shape[1] - 6, 4, -1):
-        if np.average((imageret[int(0.2 * imageret.shape[0]):int(0.6 * imageret.shape[0]), i:i + 4])) > 100:
+    for i in range(imageret.shape[1] ,int(0.15*imageret.shape[1]), -1):
+        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]), i- int(0.15*imageret.shape[1]):i])) > 100:
             end = i
             break
     filtered = imageret[:, start:end]
-
-    for i in range(filtered.shape[1] - 3):
-        if np.average((filtered[i:i + 3, :])) > 120:
+    show_images([filtered])
+    for i in range(filtered.shape[0] - int(0.3*filtered.shape[0])):
+        if np.average((filtered[i:i + int(0.3*filtered.shape[0]), :])) > 120:
             starti = i
             break
 
-    for i in range(filtered.shape[0] - 3, 0, -1):
-        if np.average((filtered[i:i + 3, :])) > 120:
+    for i in range(filtered.shape[0], int(0.3*filtered.shape[0]), -1):
+        if np.average((filtered[i- int(0.3*filtered.shape[0]):i , :])) > 120:
             endi = i
             break
+    print(starti,endi,"XD")
     filtered = ret[starti:endi, start:end]
-    cv2.rectangle(img, (start, starti), (end, endi), (255, 0, 0), 2)
+    print(start,end,starti,endi)
+    print(maxi[0],maxi[1],wx,wy)
+    cv2.rectangle(img, (start+maxi[1],starti+maxi[0] ), (maxi[1]+end,maxi[0]+endi ), (255, 0, 0), 4)
 
     print(starti, endi)
     show_images([ret],["orginal"])
