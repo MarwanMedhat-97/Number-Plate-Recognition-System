@@ -154,6 +154,12 @@ def mDilation(mPic, SE):
             mOut[i][j] = ORI_SE(foreground, SE)
     return mOut
 
+def Opening(mPic, SE):
+    return mDilation(mErosion(mPic, SE), SE)
+
+
+def Closing(mPic, SE):
+    return mErosion(mDilation(mPic, SE), SE)
 
 def PrintBinary(PIC):
     io.imshow(PIC, cmap="binary")  # 0~255 np.zeros((2, 1))
