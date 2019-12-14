@@ -132,7 +132,7 @@ def Template_matching(img,template):      # matching 2 images
     return count
 
 
-def Character_Recognition(test_img):     # take the test image and compare it with all characters and letters and
+def Character_Recognition(test_img,showSteps):     # take the test image and compare it with all characters and letters and
     num_of_matched_pixels = []           # then return the most character having common features with it
 #    test_img = preprocess(test_img)
     test_img[test_img > 0] = 1

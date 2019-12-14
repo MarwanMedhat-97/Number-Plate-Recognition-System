@@ -9,7 +9,7 @@ import numpy as np
 import cv2
 
 
-def Segement_Char(img):
+def Segement_Char(img,ShowStep):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Get The Thresholding TODO:get another
     gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)

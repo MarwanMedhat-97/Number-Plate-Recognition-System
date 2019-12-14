@@ -1,4 +1,4 @@
-from Preprocessing import *
+from Plate_Detection import *
 from Character_Segementation import *
 from Character_Recognition import *
 
@@ -6,23 +6,30 @@ from Character_Recognition import *
 
 
 
+
+
+
+
+
 ShowSteps = 0
 FrameList = []
-FrameList = extractImages("../03-Dataset/video12.mp4"
-                          )
+VideoName = "car6.mp4"
+Dest = "../03-Dataset/" + VideoName
+FrameList = extractImages(Dest)
+PlateFrameList = []
 for Frame in FrameList:
     PlateList = []
-    #TEST_img = io.imread("../03-Dataset/xx.png")
-    PLATE_img, PlateInFrame = Harris(Frame)
+    # TEST_img = io.imread("../03-Dataset/xx.png")
+    PLATE_img, PlateInFrame = Working_Harris(Frame, 1)
     CharacterList = []
-    show_images([PLATE_img,PlateInFrame], ["The plate ?","Img with red rectangle ?"])
+    show_images([PLATE_img, PlateInFrame], ["The plate ?", "Img with red rectangle ?"])
     # Characters Segementation =>
-    CharacterList = Segement_Char(PLATE_img)
+    CharacterList = Segement_Char(PLATE_img, ShowSteps)
     PlateNumber = ""
     # Characters Recognition =>
-    for Char in CharacterList:
-        #Char=1-Char
-        PlateNumber += Character_Recognition(Char)
+   # for Char in CharacterList:
+    #    PlateNumber += Character_Recognition(Char, ShowSteps)
+    PlateFrameList.append(PlateInFrame)
     print(PlateNumber)
 
     # Display the resulting frame
@@ -33,8 +40,17 @@ for Frame in FrameList:
 #     break
 
 # height, width, layers = frame.shape
+
 # Output Video =>
 # video = cv2.VideoWriter(video_name, 0, 1, (width,height))
 
 # for image in images:
 #   video.write(cv2.imread(os.path.join(image_folder, image)))
+height, width, layers = PlateFrameList[0].shape
+size = (width, height)
+VIDEO_NAME = VideoName[:len(VideoName)-4]+"PlateDetection.avi"
+out = cv2.VideoWriter(VIDEO_NAME, cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+
+for Frame in PlateFrameList:
+    out.write(Frame)
+out.release()

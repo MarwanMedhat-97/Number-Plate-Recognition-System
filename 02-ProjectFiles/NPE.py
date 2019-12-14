@@ -1,4 +1,3 @@
-from Preprocessing import Preprocess
 from commonfunctions import *
 
 
@@ -64,24 +63,38 @@ def SobelEdgeDetection(img):
     return XEdges, YEdges, EDGE_
 
 
-for filename in sorted(glob.glob('../03-Dataset/*.jpg')): # looping on each image in the folder
-    img = cv2.imread(filename)# read the image
-    img = Preprocess(img) # output is expected to be GRAYSCALE and no noise
-    # Using disk SE
-    SE_Size = 50
-    SE = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * SE_Size - 1, 2 * SE_Size - 1))
-    imgOpening = Opening(img, SE)  # Opening Morphological
-    imgSub = img-imgOpening   # Subtraction
-    GlobalThresh = threshold_otsu(imgOpening)# global threshold level is calculated by using Otsu's method
-    imgThresh=np.copy(imgSub)
-    imgThresh[imgSub >= GlobalThresh] = 1
-    imgThresh[imgSub < GlobalThresh] = 0
-    show_images([img, imgOpening, imgSub,imgThresh], ["Orignal Image ", "After Opening ", "Img Subtruction","Image Binariziation"])
-    #Edge Detection by Sobel Operator
-    ImgX, ImgEdgeY, ImgEdge = SobelEdgeDetection(imgThresh)
-    show_images([img, imgOpening, imgSub, imgThresh,ImgEdge],
-                ["Orignal Image ", "After Opening ", "Img Subtruction", "Image Binariziation","Edge Detection"])
-    SE_Close=np.ones((3,3))
-    imgClosing = Closing(ImgEdge, SE)  # Opening Morphological
-    #show_images([img, imgOpening, imgSub, imgThresh, ImgEdge,imgClosing],
-         #       ["Orignal Image ", "After Opening ", "Img Subtruction", "Image Binariziation", "Edge Detection","Filling Holes"])
+def PlateDetection_UsingDiskSE():
+    for filename in sorted(glob.glob('../03-Dataset/*.jpg')):  # looping on each image in the folder
+        img = cv2.imread(filename)  # read the image
+        # img = Preprocess(img)  # output is expected to be GRAYSCALE and no noise
+        # Using disk SE
+        SE_Size = 100
+        img = rgb2gray(img)
+        img = img.astype(np.float)
+        #  imgThresh = cv2.adaptiveThreshold(imgBlurred, 255.0, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, ADAPTIVE_THRESH_BLOCK_SIZE, ADAPTIVE_THRESH_WEIGHT)
+        # bilateral = cv2.bilateralFilter(img, 15, 75, 75)
+
+        # Noise removal with iterative bilateral filter(removes noise while preserving edges)
+        gray = cv2.bilateralFilter(img, 11, 17, 17)
+        show_images([gray], ["Preprocessing?"])
+        SE = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * SE_Size - 1, 2 * SE_Size - 1))
+        imgOpening = Opening(img, SE)  # Opening Morphological
+        imgSub = imgOpening - img  # Subtraction
+        GlobalThresh = threshold_otsu(imgOpening)  # global threshold level is calculated by using Otsu's method
+        imgThresh = np.copy(imgSub)
+        imgThresh[imgSub >= GlobalThresh] = 0
+        imgThresh[imgSub < GlobalThresh] = 1
+        show_images([img, imgOpening, imgSub, imgThresh],
+                    ["Orignal Image ", "After Opening ", "Img Subtruction", "Image Binariziation"])
+        # Edge Detection by Sobel Operator
+        ImgX, ImgEdgeY, ImgEdge = SobelEdgeDetection(imgThresh)
+        show_images([img, imgOpening, imgSub, imgThresh, ImgEdge],
+                    ["Orignal Image ", "After Opening ", "Img Subtruction", "Image Binariziation", "Edge Detection"])
+        SE_Close = np.ones((5, 5))
+        imgClosing = Closing(ImgEdge, SE_Close)  # Opening Morphological
+        show_images([img, imgOpening, imgSub, imgThresh, ImgEdge, imgClosing],
+                    ["Orignal Image ", "After Opening ", "Img Subtruction", "Image Binariziation", "Edge Detection",
+                     "Filling Holes"])
+
+
+PlateDetection_UsingDiskSE()
