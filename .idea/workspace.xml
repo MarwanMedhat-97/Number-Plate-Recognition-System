@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="814417f3-7d61-4981-b80a-385cb73103be" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/0.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/1.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/2.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/3.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/4.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/5.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/6.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/7.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/8.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/9.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/A.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/B.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/C.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/D.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/E.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/F.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/G.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/H.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/I.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/J.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/K.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/L.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/M.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/N.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/O.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/P.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/Q.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/R.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/S.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/T.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/U.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/V.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/W.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/X.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/Y.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/Z.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill0.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill4.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill6.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill6_2.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill8.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill9.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fill9_2.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillA.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillB.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillD.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillO.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillP.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillQ.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character Images/fillR.bmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character_Recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/02-ProjectFiles/Character_Recognition.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Character_Segementation.py" beforeDir="false" afterPath="$PROJECT_DIR$/02-ProjectFiles/Character_Segementation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/02-ProjectFiles/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/NPE.py" beforeDir="false" afterPath="$PROJECT_DIR$/02-ProjectFiles/NPE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-ProjectFiles/Preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/02-ProjectFiles/Plate_Detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03-Dataset/frames/image0.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/03-Dataset/frames/image0.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03-Dataset/frames/image1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/03-Dataset/frames/image1.jpg" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1U7j1hCGPm0W0EWFilADmKU4Qae" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.Main">
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Number-Plate-Recognition-System" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/02-ProjectFiles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/02-ProjectFiles/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="NPE" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Number-Plate-Recognition-System" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/02-ProjectFiles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/02-ProjectFiles/NPE.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Plate_Detection" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Number-Plate-Recognition-System" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/02-ProjectFiles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/02-ProjectFiles/Plate_Detection.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Preprocessing" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Number-Plate-Recognition-System" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/02-ProjectFiles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\Mohamed\Documents\GitHub\Number-Plate-Recognition-System\02-ProjectFiles\Plate_Detection.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.Main" />
+        <item itemvalue="Python.Plate_Detection" />
+        <item itemvalue="Python.NPE" />
+        <item itemvalue="Python.Preprocessing" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="814417f3-7d61-4981-b80a-385cb73103be" name="Default Changelist" comment="" />
+      <created>1574714334799</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1574714334799</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="525" y="214" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1576324279549">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="525" y="214" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1576324279549" />
+    <state width="1515" height="194" key="GridCell.Tab.0.bottom" timestamp="1576349138731">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="194" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1576349138731" />
+    <state width="1515" height="194" key="GridCell.Tab.0.center" timestamp="1576349138731">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="194" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1576349138731" />
+    <state width="1515" height="194" key="GridCell.Tab.0.left" timestamp="1576349138731">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="194" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1576349138731" />
+    <state width="1515" height="194" key="GridCell.Tab.0.right" timestamp="1576349138731">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="194" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1576349138731" />
+    <state width="1515" height="261" key="GridCell.Tab.1.bottom" timestamp="1576324688560">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1576324688560" />
+    <state width="1515" height="261" key="GridCell.Tab.1.center" timestamp="1576324688560">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1576324688560" />
+    <state width="1515" height="261" key="GridCell.Tab.1.left" timestamp="1576324688560">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1576324688560" />
+    <state width="1515" height="261" key="GridCell.Tab.1.right" timestamp="1576324688560">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1576324688560" />
+    <state x="477" y="239" key="com.intellij.ide.util.TipDialog" timestamp="1576324742479">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="477" y="239" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1576324742479" />
+    <state x="474" y="173" width="588" height="478" key="find.popup" timestamp="1575887589632">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="474" y="173" width="588" height="478" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1575887589632" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1576153731403">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1576153731403" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/02-ProjectFiles/Character_Segementation.py</url>
+          <line>79</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/02-ProjectFiles/Character_Segementation.py</url>
+          <line>89</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/02-ProjectFiles/Main.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/02-ProjectFiles/Plate_Detection.py</url>
+          <line>114</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/02-ProjectFiles/Character_Segementation.py</url>
+          <line>117</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/02-ProjectFiles/Character_Segementation.py</url>
+          <line>19</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="Parition" language="Python" />
+        <watch expression="ListPlates" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
