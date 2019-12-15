@@ -90,7 +90,7 @@ def Harris(img, ShowSteps):
     if ShowSteps:
         show_images([sat, ThreshImage, GrayLevel], ["Image before Harris ", "Binary Image", "gray?"])
     # ----------------------------------------------------------------------------------------
-    # print(imgg.shape)
+
     dst = my_cornerHarris(ThreshImage)
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
                            iterations=3)
@@ -105,22 +105,13 @@ def Harris(img, ShowSteps):
     wx = int(arr.shape[0] / 10.5)
     wy = int(arr.shape[1] / 3)
     ListPlates = []
-    # Try those dimensitions ?
-    #   plate_dimensions = (
-    #  0.03 * label_image.shape[0], 0.08 * label_image.shape[0], 0.15 * label_image.shape[1], 0.3 * label_image.shape[1])
-    # plate_dimensions2 = (
-    # 0.08 * label_image.shape[0], 0.2 * label_image.shape[0], 0.15 * label_image.shape[1], 0.4 * label_image.shape[1])
-    #  print(arr)
     ThreshImage = 1 - ThreshImage
     for i in range(arr.shape[0] - 1, 0 + wx, -int(wx / 3)):  # tool
         # if (i < int(arr.shape[0] / 2)):
         #   break
         for j in range(arr.shape[1] - 1, 0 + wy, -int(wy / 3)):  # 3ard
-            # print(np.sum(arr[i-wx:i,j-wy:j]))
-            #  print(np.count_nonzero(ThreshImage[i - wx:i, j - wy:j] == 0),np.sum(arr[i - wx:i, j - wy:j]))
-            # print(np.count_nonzero(ThreshImage[i - wx:i, j - wy:j] == 0))
-            if (np.sum(arr[i - wx:i, j - wy:j])) > CurrMax:  # and np.count_nonzero(
-                # ThreshImage[i - wx:i, j - wy:j] != 0) > 5000:
+
+            if (np.sum(arr[i - wx:i, j - wy:j])) > CurrMax:
 
                 contours, hierarchy = cv2.findContours(ThreshImage[i - wx:i, j - wy:j], cv2.RETR_TREE,
                                                        cv2.CHAIN_APPROX_SIMPLE)
@@ -229,25 +220,19 @@ def Working_Harris(img, Steps):
     ThreshImage[sat < GlobalThresh] = 0
     ThreshImage = cv2.medianBlur(ThreshImage, ksize=3)
     # sat=GammaCorrection(image,1,10)
-    show_images([sat, ThreshImage])
-    # ----------------------------------------------------------------------------------------
-    # print(imgg.shape)
+    #show_images([sat, ThreshImage])
     # dst = cv2.cornerHarris(sat, 20, 5, 0.12)
     dst = my_cornerHarris(sat)
     dst[dst<0.1*dst.max()]=0
     for y in range(int(0.4*dst.shape[0])):
         dst[y,:]=0
-    #show_images([dst], ["suppose to do this ?"])
-    # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
                            iterations=3)
-    #show_images([dst])
     imag = np.copy(img)
     arr = ((dst > 0.1 * dst.max()) & (image > 150))
-    #show_images([arr])
     max = -1
     maxi = [0, 0]
-    wx = int(arr.shape[0] / 10.5)
+    wx = int(arr.shape[0] / 11.5)
     wy = int(arr.shape[1] / 3)
     ListPlates = []
     #  print(arr)
@@ -267,30 +252,21 @@ def Working_Harris(img, Steps):
     if max == 0:
         print("NO PLATES in this image")
         return img, img
-    #   cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
 
     ListPlates.reverse()
     if len(ListPlates) == 0:
         print("NO PLATES in this image")
         return img, img
-    #  cv2.rectangle(imag, (ListPlates[1][0], ListPlates[1][1]), (ListPlates[1][0] + wy, ListPlates[1][1] + wx),
-    #              (255, 0, 0), 2)
     ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
-    #  show_images([ret, imag])
-    # return ret, imag
     imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
-    start, end = 1, 1
-    # print(imageret.shape)
-    starti, endi = 1, 1
     show_images([imageret], ["lol"])
     ret, new_img = cv2.threshold(imageret, 150, 255, cv2.THRESH_BINARY_INV)  # for black text , cv.THRESH_BINARY_INV
-    show_images([new_img], ["lol"])
+    show_images([new_img], ["After Thresholding"])
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (4,
-                                                         3))  # to manipulate the orientation of dilution , large x means horizonatally dilating  more, large y means vertically dilating more
-    dilated = cv2.erode(new_img, kernel, iterations=5)  # dilate , more the iteration more the dilation
+    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (4,3))
+    dilated = cv2.erode(new_img, kernel, iterations=5)
     dilated=255-dilated
-    show_images([dilated], ["lol"])
+    show_images([dilated], ["After Dilation"])
     contours, hierarchy = cv2.findContours(dilated,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
     result=np.copy(img)
     maxArea=-1
@@ -298,18 +274,13 @@ def Working_Harris(img, Steps):
         if cv2.contourArea(contour)>maxArea:
             maxArea=cv2.contourArea(contour)
     for contour in contours:
-        # get rectangle bounding contour
         [x, y, w, h] = cv2.boundingRect(contour)
         area = cv2.contourArea(contour)
-        print(area)
-        # Don't plot small false positives that aren't text
         if area < maxArea:
             continue
-        print(1)
-        # draw rectangle around contour on original image
         cv2.rectangle(img, (x+ maxi[1], y+ maxi[0]), (x + w+ maxi[1], y + h+ maxi[0]), (255, 0, 0), 4)
         result=imag[y+ maxi[0]:y+ maxi[0]+h,x+ maxi[1]:x+ maxi[1]+w]
-        show_images([img],["lalolo"])
+        show_images([img],["Bounding Box(s)"])
 
 
 
