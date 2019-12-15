@@ -90,22 +90,22 @@ def Template_matching(img,template):      # matching 2 images
     img[img > 1] = 1
     #SE = np.ones((3, 3))
     #img = Closing(img, SE)
-    img = img.astype('uint8')
+    #img = img.astype('uint8')
 
     #show_images([template, img], ["TemplateImage", "Test_img"])
-    num_parts = Count_connected_parts(img)
-    holes = count_holes(img, num_parts)
-    vertical_trans = Max_transition_colomns(img)
-    horizontal_trans = Max_transition_rows(img)
+    #num_parts = Count_connected_parts(img)
+    #holes = count_holes(img, num_parts)
+    #vertical_trans = Max_transition_colomns(img)
+    #horizontal_trans = Max_transition_rows(img)
     #print(holes,vertical_trans,horizontal_trans)
-    num_parts2 = Count_connected_parts(template)
-    holes2 = count_holes(template, num_parts2)
-    vertical_trans2 = Max_transition_colomns(template)
-    horizontal_trans2 = Max_transition_rows(template)
+    #num_parts2 = Count_connected_parts(template)
+    #holes2 = count_holes(template, num_parts2)
+    #vertical_trans2 = Max_transition_colomns(template)
+    #horizontal_trans2 = Max_transition_rows(template)
     #print(holes2, vertical_trans2, horizontal_trans2)
     count = 0
     img_template_probability_match = 0
-    if(holes==holes2-1 and vertical_trans==vertical_trans2 and horizontal_trans==horizontal_trans2):
+    #if(holes==holes2-1 and vertical_trans==vertical_trans2 and horizontal_trans==horizontal_trans2):
         #img = 1 - img
         #template = 1 - template
         #first_image_hist = cv2.calcHist([img], [0], None, [256], [0, 256])
@@ -123,12 +123,12 @@ def Template_matching(img,template):      # matching 2 images
     #print(img.shape,template.shape)
    # patch = img[i - 1:i + 2, j - 1:j + 2]
         #show_images([1-template,1-img], ["TemplateImage", "Test_img"])
-        for i in range(img.shape[0]):
-            for j in range(img.shape[1]):
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
             #patch1 = img[i-2 : i+3 , j-2 : j+3]
             #patch2 = template[i - 2: i + 3, j - 2: j + 3]
-                if(img[i,j]==template[i,j] ):  # don`t count the background
-                    count+=1
+            if(img[i,j]==template[i,j] ):  # don`t count the background
+                count+=1
     return count
 
 
@@ -142,13 +142,13 @@ def Character_Recognition(test_img,showSteps):     # take the test image and com
         img = preprocess(img)
         width=test_img.shape[1]
         height=test_img.shape[0]
-        dim = (int(14*width/15), int(4*height/6)+1)
+        dim = (width, height)
 
         img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
         img[img>0]=1
         #print(img.shape,test_img.shape)
 
-        matched_pixels = Template_matching(test_img[int(height/6):int(5*height/6),int(width/15)+1:width],img)
+        matched_pixels = Template_matching(test_img,img)
         num_of_matched_pixels.append(matched_pixels)
         #print(matched_pixels)
     num_of_matched_pixels = np.array(num_of_matched_pixels)
