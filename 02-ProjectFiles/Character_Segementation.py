@@ -9,13 +9,13 @@ import numpy as np
 import cv2
 
 
-def Segement_Char(img, ShowStep):
+def Segement_Char(img,ShowStep):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Get The Thresholding TODO:get another
     gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
     gray = cv2.medianBlur(gray, 3)
-    # blur = cv2.GaussianBlur(img, (5, 5), 0)
-    # ret3, th3 = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+   # blur = cv2.GaussianBlur(img, (5, 5), 0)
+    #ret3, th3 = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     GlobalThresh = threshold_otsu(gray)
 
@@ -35,10 +35,10 @@ def Segement_Char(img, ShowStep):
     # for h in Height:
     # ASSUMITON => Background is 0 and Characters  are equal to 1
     LastCut = 0
-    # Parition = skeletonize(1 - Parition)
-    # Parition = 1 - Parition
+    #Parition = skeletonize(1 - Parition)
+    #Parition = 1 - Parition
     show_images([Parition], ["Char Segementation FOR THIS PLATE"])
-    # -----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------
 
     MAX = 0
     Base_INDEX = 0
@@ -48,7 +48,7 @@ def Segement_Char(img, ShowStep):
                 MAX:
             MAX = max
             Base_INDEX = i
-    ThreshImage[Base_INDEX, :] = np.ones(ThreshImage.shape[1])
+    ThreshImage[Base_INDEX,:]=np.ones(ThreshImage.shape[1])
     print(Base_INDEX)
 
     # GETING MAX transition row
@@ -79,8 +79,9 @@ def Segement_Char(img, ShowStep):
             flag = 0
             ThereIsGap = False
 
+
             for k in range(abs(Start - End) + 1):
-                CurrVP = np.sum(Parition[MaxTransitionIndex - 30:MaxTransitionIndex + 80, Start + k])
+                CurrVP = np.sum(Parition[MaxTransitionIndex -30:MaxTransitionIndex + 80, Start + k])
                 # print(CurrVP,"wee",StartIndex,EndIndex)
                 if CurrVP == 0:
                     print("Detect Gap in the Word ")
@@ -92,7 +93,7 @@ def Segement_Char(img, ShowStep):
                 ThreshImage[:, CutIndex] = np.zeros(Height)
                 if abs(Dummy - CutIndex) < 7:
                     continue  # garbage
-                Window = np.copy(ThreshImage[MaxTransitionIndex - 30:MaxTransitionIndex + 80, Dummy: CutIndex])
+                Window = np.copy(ThreshImage[:, Dummy: CutIndex])
                 Dummy = CutIndex
                 if Dummy == 0:
                     Dummy = CutIndex
@@ -104,11 +105,14 @@ def Segement_Char(img, ShowStep):
 
         #   CutIndex = int((Start + End) / 2)
 
-    Window = np.copy(ThreshImage[MaxTransitionIndex - 30:MaxTransitionIndex + 80, Dummy:])
+    Window = np.copy(ThreshImage[:, Dummy:])
     CharacterList.append(Window)
     show_images([ThreshImage], ["Plate With Cut Segementation"])
-    i = 0
+    i=0
     for CharImage in CharacterList:
-        i += 1
-        #show_images([CharImage], ["Char Segementation"])
+        cv2.imwrite("../03-Dataset/frames/" + "image%d.jpg" %i, CharImage)
+        i+=1
+        show_images([CharImage], ["Char Segementation"])
     return CharacterList
+
+
