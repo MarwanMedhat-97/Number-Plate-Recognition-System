@@ -229,13 +229,10 @@ def my_cornerHarris(Orignal_img):
 
 
 def Working_Harris(img, Steps):
-    # Preprocessing on frame=>
-
     image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     image = cv2.bilateralFilter(image, 11, 17, 17)
-    equ = cv2.equalizeHist(image)
     # image = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-    sat = cv2.medianBlur(equ, ksize=3)
+    sat = cv2.medianBlur(image, ksize=3)
     show_images([sat], ["After preprocessing"])
     GlobalThresh = threshold_otsu(sat)
     ThreshImage = np.copy(sat)
@@ -248,7 +245,10 @@ def Working_Harris(img, Steps):
     # print(imgg.shape)
     # dst = cv2.cornerHarris(sat, 20, 5, 0.12)
     dst = my_cornerHarris(sat)
-    show_images([dst], "suppose to do this ?")
+    dst[dst<0.1*dst.max()]=0
+    for y in range(int(0.4*dst.shape[0])):
+        dst[y,:]=0
+    show_images([dst], ["suppose to do this ?"])
     # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
                            iterations=3)
@@ -258,17 +258,17 @@ def Working_Harris(img, Steps):
     show_images([arr])
     max = -1
     maxi = [0, 0]
-    wx = int(arr.shape[0] / 10.5)-100
-    wy = int(arr.shape[1] / 3)-100
+    wx = int(arr.shape[0] / 10.5)
+    wy = int(arr.shape[1] / 3)
     ListPlates = []
     #  print(arr)
-    for i in range(arr.shape[0] - 1, 0, -int(wx / 3)):
-        if i < int(arr.shape[0] / 2)-50:
+    for i in range(arr.shape[0] - 1, 0, -int(wx / 3)):  # tool
+        if (i < int(arr.shape[0]*0.4)):
             break
         for j in range(arr.shape[1] - 1, 0 + wy, -int(wy / 3)):  # 3ard
             # print(np.sum(arr[i-wx:i,j-wy:j]))
             if (np.sum(arr[i - wx:i, j - wy:j])) >= max and (
-                    np.count_nonzero(ThreshImage[i - wx:i, j - wy:j] == 1) > 200):
+                    np.count_nonzero(ThreshImage[i - wx:i, j - wy:j] == 0) > 20):
                 max = np.sum(arr[i - wx:i, j - wy:j])
                 maxi[0] = i - wx
                 maxi[1] = j - wy
@@ -277,7 +277,7 @@ def Working_Harris(img, Steps):
     # print(max, "Max:")
     if max == 0:
         print("NO PLATES in this image")
-        return img, img
+        return ret, img
     #   cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
 
     ListPlates.reverse()

@@ -152,14 +152,12 @@ def Harris(img):
         if np.average((filtered[i- int(0.3*filtered.shape[0]):i , :])) > 120:
             endi = i
             break
-    print(starti,endi,"XD")
     filtered = ret[starti:endi, start:end]
-    print(start,end,starti,endi)
-    print(maxi[0],maxi[1],wx,wy)
     cv2.rectangle(img, (start+maxi[1],starti+maxi[0] ), (maxi[1]+end,maxi[0]+endi ), (255, 0, 0), 4)
 
     print(starti, endi)
     show_images([ret],["orginal"])
+    print(filtered.shape,"xdxd")
     # return filtered, 0
     return filtered, img
 
