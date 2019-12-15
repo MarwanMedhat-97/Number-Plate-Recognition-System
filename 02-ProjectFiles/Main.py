@@ -1,6 +1,7 @@
 from Plate_Detection import *
 from Character_Segementation import *
 from Character_Recognition import *
+#from Character_Identification import *
 
 # TODO: 1- CharacterSegementation by connected components  (Least Significatnt) to get more accurcy  ,2-Char_Recognition get an impleneted module   ,3- implement harris manually and handle the corner case
 
@@ -13,7 +14,7 @@ from Character_Recognition import *
 
 ShowSteps = 0
 FrameList = []
-VideoName = "car6.mp4"
+VideoName = "video12.mp4"
 Dest = "../03-Dataset/" + VideoName
 FrameList = extractImages(Dest)
 PlateFrameList = []
@@ -27,8 +28,8 @@ for Frame in FrameList:
     CharacterList = Segement_Char(PLATE_img, ShowSteps)
     PlateNumber = ""
     # Characters Recognition =>
-   # for Char in CharacterList:
-    #    PlateNumber += Character_Recognition(Char, ShowSteps)
+    for Char in CharacterList:
+        PlateNumber += Character_Recognition(char,ShowSteps)
     PlateFrameList.append(PlateInFrame)
     print(PlateNumber)
 
