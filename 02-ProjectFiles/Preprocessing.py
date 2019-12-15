@@ -53,7 +53,7 @@ def extractImages(pathIn):
         #   print('Read a new frame: ', success)
         if success == 0:
             break
-        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        #image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 
         #   cv2.ipmwrite("../03-Dataset/frames/"+"frame%d.jpg" %
         #          count, image)     # save frame as JPEG file
