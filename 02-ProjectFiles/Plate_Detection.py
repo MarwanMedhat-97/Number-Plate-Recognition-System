@@ -53,7 +53,7 @@ def extractImages(pathIn):
         #   print('Read a new frame: ', success)
         if success == 0:
             break
-        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        # image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 
         #   cv2.ipmwrite("../03-Dataset/frames/"+"frame%d.jpg" %
         #          count, image)     # save frame as JPEG file
@@ -199,18 +199,6 @@ def Harris(img, ShowSteps):
     return filtered, img
 
 
-# print(CurrMax, "Max:")
-# if CurrMax == 0:
-# print("NO PLATES in this image")
-# return ret, img
-#   cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
-
-# ListPlates.reverse()
-#  if len(ListPlates) == 0:
-#    print("NO PLATES in this image")
-#   return img, img
-
-
 def my_cornerHarris(Orignal_img):
     img = rgb2gray(Orignal_img)
     # Sobel Algorithm =>
@@ -225,6 +213,29 @@ def my_cornerHarris(Orignal_img):
     detA = Ixx * Iyy - Ixy ** 2
     traceA = Ixx + Iyy
     harris_response = detA - k * traceA ** 2
+
+    return harris_response
+    Thold = 2000
+    # show_images([R, img])
+    R_Threshold = np.copy(harris_response)
+    R_Threshold[harris_response >= Thold] = 1.0
+    R_Threshold[harris_response < Thold] = 0.0
+
+    WindowWidth = 3
+    WindowHeight = 3
+    mOut = np.zeros((np.shape(R_Threshold)[0], np.shape(R_Threshold)[1]))
+    EdgeX = (int)(WindowWidth / 2)
+    EdgeY = (int)(WindowHeight / 2)
+    for i in range(np.shape(R_Threshold)[0] - EdgeX):
+        for j in range(np.shape(R_Threshold)[1] - EdgeY):
+            foreground = np.zeros((WindowWidth, WindowHeight))
+            for fx in range(WindowWidth):
+                for fy in range(WindowHeight):
+                    foreground[fx][fy] = R_Threshold[i + fx - EdgeX][j + fy - EdgeY]
+            if np.argmax(np.array(foreground)) == 4:
+                mOut[i, j] = 1
+    show_images([R_Threshold])
+
     return harris_response
 
 
@@ -233,22 +244,22 @@ def Working_Harris(img, Steps):
     image = cv2.bilateralFilter(image, 11, 17, 17)
     # image = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
     sat = cv2.medianBlur(image, ksize=3)
-    show_images([sat], ["After preprocessing"])
+    if Steps:
+        show_images([sat], ["After preprocessing"])
     GlobalThresh = threshold_otsu(sat)
     ThreshImage = np.copy(sat)
     ThreshImage[sat >= GlobalThresh] = 1
     ThreshImage[sat < GlobalThresh] = 0
     ThreshImage = cv2.medianBlur(ThreshImage, ksize=3)
-    # sat=GammaCorrection(image,1,10)
-    show_images([sat, ThreshImage])
+    if Steps:
+        show_images([sat, ThreshImage])
     # ----------------------------------------------------------------------------------------
-    # print(imgg.shape)
-    # dst = cv2.cornerHarris(sat, 20, 5, 0.12)
     dst = my_cornerHarris(sat)
-    dst[dst<0.1*dst.max()]=0
-    for y in range(int(0.4*dst.shape[0])):
-        dst[y,:]=0
-    show_images([dst], ["suppose to do this ?"])
+    dst[dst < 0.1 * dst.max()] = 0
+    for y in range(int(0.4 * dst.shape[0])):
+        dst[y, :] = 0
+    if Steps:
+        show_images([dst], ["suppose to do this ?"])
     # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
                            iterations=3)
@@ -262,8 +273,8 @@ def Working_Harris(img, Steps):
     wy = int(arr.shape[1] / 3)
     ListPlates = []
     #  print(arr)
-    for i in range(arr.shape[0] - 1, 0, -int(wx / 3)):  # tool
-        if (i < int(arr.shape[0]*0.4)):
+    for i in range(arr.shape[0] - 1, 0 + wx, -int(wx / 3)):  # tool
+        if (i < int(arr.shape[0] * 0.4)):
             break
         for j in range(arr.shape[1] - 1, 0 + wy, -int(wy / 3)):  # 3ard
             # print(np.sum(arr[i-wx:i,j-wy:j]))
@@ -273,55 +284,75 @@ def Working_Harris(img, Steps):
                 maxi[0] = i - wx
                 maxi[1] = j - wy
                 ListPlates.append([i - wx, j - wy, max])
+    print(np.shape(arr))
+ #   arr=arr[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
+    print(np.shape(arr))
+    arr[0:maxi[0]]=np.zeros(np.shape(arr)[1])
+    arr[maxi[0]+wx:] = np.zeros(np.shape(arr)[1])
+    arr[:,0:maxi[1]]=0
+    arr[:,maxi[1]+wy:] = 0
 
-    # print(max, "Max:")
+    arr[arr > 0] = 1
+    arr[arr <= 0] = 0
+    arr = arr.astype(np.int)
+    show_images([arr], ["Harris "])
+    ret = image[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
+
     if max == 0:
         print("NO PLATES in this image")
-        return ret, img
-    #   cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
-
-    ListPlates.reverse()
-    if len(ListPlates) == 0:
-        print("NO PLATES in this image")
         return img, img
-    #  cv2.rectangle(imag, (ListPlates[1][0], ListPlates[1][1]), (ListPlates[1][0] + wy, ListPlates[1][1] + wx),
-    #              (255, 0, 0), 2)
-    ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
-    #  show_images([ret, imag])
-    # return ret, imag
-    imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
+    ListPlates.reverse()
+    # imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
+    imageret = np.copy(ret)
     start, end = 1, 1
-    # print(imageret.shape)
     starti, endi = 1, 1
-    show_images([imageret], ["lol"])
-    for i in range(imageret.shape[1] - int(0.15 * imageret.shape[1]) - 1):
-        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]),
-                       i:i + int(0.15 * imageret.shape[1])])) > 100:
+    if Steps:
+        show_images([imageret], ["lol"])
+    max = 0
+    for i in range(arr.shape[1] - int(0.15 * arr.shape[1]) - 1):
+        print(np.average((arr[int(0.5 * arr.shape[0]):int(0.8 * arr.shape[0]),
+                          i:i + int(0.15 * arr.shape[1])])))
+        if np.average((arr[int(0.5 * arr.shape[0]):int(0.8 * arr.shape[0]),
+                       i:i + int(0.15 * arr.shape[1])])) > max:
+            max = np.average((arr[int(0.5 * arr.shape[0]):int(0.8 * arr.shape[0]),
+                              i:i + int(0.15 * arr.shape[1])]))
             start = i
-            break
-    for i in range(imageret.shape[1], int(0.15 * imageret.shape[1]), -1):
-        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]),
-                       i - int(0.15 * imageret.shape[1]):i])) > 100:
+
+    print(start, "weee?")
+
+    max = 0
+    for i in range(arr.shape[1], int(0.15 * arr.shape[1]), -1):
+        if np.average((arr[int(0.5 * arr.shape[0]):int(0.8 * arr.shape[0]),
+                       i - int(0.15 * arr.shape[1]):i])) > max:
+            max = np.average((arr[int(0.5 * arr.shape[0]):int(0.8 * arr.shape[0]),
+                              i - int(0.15 * arr.shape[1]):i]))
             end = i
-            break
-    filtered = imageret[:, start:end]
-    show_images([filtered])
-    for i in range(filtered.shape[0] - int(0.3 * filtered.shape[0])):
-        if np.average((filtered[i:i + int(0.3 * filtered.shape[0]), :])) > 120:
+    print(end)
+    filtered = image[:, start:end]
+    show_images([imageret, filtered])
+    if Steps:
+        show_images([filtered])
+    max = 0
+    for i in range(arr.shape[0] - int(0.3 * arr.shape[0])):
+        if np.average((arr[i:i + int(0.3 * arr.shape[0]), :])) > max:
+            max = np.average((arr[i:i + int(0.3 * arr.shape[0]), :]))
             starti = i
-            break
-
-    for i in range(filtered.shape[0], int(0.3 * filtered.shape[0]), -1):
-        if np.average((filtered[i - int(0.3 * filtered.shape[0]):i, :])) > 120:
+    max = 0
+    for i in range(arr.shape[0], int(0.3 * arr.shape[0]), -1):
+        if np.average((arr[i - int(0.3 * arr.shape[0]):i, :])) > max:
+            max = np.average((arr[i - int(0.3 * arr.shape[0]):i, :]))
             endi = i
-            break
-    print(starti, endi, "XD")
-    filtered = ret[starti:endi, start:end]
-    print(start, end, starti, endi)
-    print(maxi[0], maxi[1], wx, wy)
+    #  print(starti, endi, "XD")
+    filtered = image[starti:endi, start:end]
+    # print(start, end, starti, endi)
+    # print(maxi[0], maxi[1], wx, wy)
     cv2.rectangle(img, (start + maxi[1], starti + maxi[0]), (maxi[1] + end, maxi[0] + endi), (255, 0, 0), 4)
-
-    print(starti, endi)
-    show_images([ret], ["orginal"])
+    show_images([ret, filtered], ["orginal", "yarab"])
+    # print(starti, endi)
+    if Steps:
+        show_images([ret,filtered], ["orginal","yarab"])
     # return filtered, 0
+    print(filtered.shape)
+    if (filtered.shape[1] == 0 or filtered.shape[0] == 0):
+        return img, img
     return filtered, img
