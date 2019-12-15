@@ -199,17 +199,6 @@ def Harris(img, ShowSteps):
     return filtered, img
 
 
-# print(CurrMax, "Max:")
-# if CurrMax == 0:
-# print("NO PLATES in this image")
-# return ret, img
-#   cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
-
-# ListPlates.reverse()
-#  if len(ListPlates) == 0:
-#    print("NO PLATES in this image")
-#   return img, img
-
 
 def my_cornerHarris(Orignal_img):
     img = rgb2gray(Orignal_img)
@@ -248,14 +237,14 @@ def Working_Harris(img, Steps):
     dst[dst<0.1*dst.max()]=0
     for y in range(int(0.4*dst.shape[0])):
         dst[y,:]=0
-    show_images([dst], ["suppose to do this ?"])
+    #show_images([dst], ["suppose to do this ?"])
     # dst = cv2.dilate(dst, kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)))
     dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
                            iterations=3)
-    show_images([dst])
+    #show_images([dst])
     imag = np.copy(img)
     arr = ((dst > 0.1 * dst.max()) & (image > 150))
-    show_images([arr])
+    #show_images([arr])
     max = -1
     maxi = [0, 0]
     wx = int(arr.shape[0] / 10.5)
@@ -277,7 +266,7 @@ def Working_Harris(img, Steps):
     # print(max, "Max:")
     if max == 0:
         print("NO PLATES in this image")
-        return ret, img
+        return img, img
     #   cv2.rectangle(imag, (maxi[1], maxi[0]), (maxi[1] + wy, maxi[0] + wx), (255, 0, 0), 2)
 
     ListPlates.reverse()
@@ -294,34 +283,34 @@ def Working_Harris(img, Steps):
     # print(imageret.shape)
     starti, endi = 1, 1
     show_images([imageret], ["lol"])
-    for i in range(imageret.shape[1] - int(0.15 * imageret.shape[1]) - 1):
-        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]),
-                       i:i + int(0.15 * imageret.shape[1])])) > 100:
-            start = i
-            break
-    for i in range(imageret.shape[1], int(0.15 * imageret.shape[1]), -1):
-        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]),
-                       i - int(0.15 * imageret.shape[1]):i])) > 100:
-            end = i
-            break
-    filtered = imageret[:, start:end]
-    show_images([filtered])
-    for i in range(filtered.shape[0] - int(0.3 * filtered.shape[0])):
-        if np.average((filtered[i:i + int(0.3 * filtered.shape[0]), :])) > 120:
-            starti = i
-            break
+    ret, new_img = cv2.threshold(imageret, 150, 255, cv2.THRESH_BINARY_INV)  # for black text , cv.THRESH_BINARY_INV
+    show_images([new_img], ["lol"])
 
-    for i in range(filtered.shape[0], int(0.3 * filtered.shape[0]), -1):
-        if np.average((filtered[i - int(0.3 * filtered.shape[0]):i, :])) > 120:
-            endi = i
-            break
-    print(starti, endi, "XD")
-    filtered = ret[starti:endi, start:end]
-    print(start, end, starti, endi)
-    print(maxi[0], maxi[1], wx, wy)
-    cv2.rectangle(img, (start + maxi[1], starti + maxi[0]), (maxi[1] + end, maxi[0] + endi), (255, 0, 0), 4)
+    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (4,
+                                                         3))  # to manipulate the orientation of dilution , large x means horizonatally dilating  more, large y means vertically dilating more
+    dilated = cv2.erode(new_img, kernel, iterations=5)  # dilate , more the iteration more the dilation
+    dilated=255-dilated
+    show_images([dilated], ["lol"])
+    contours, hierarchy = cv2.findContours(dilated,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    result=np.copy(img)
+    maxArea=-1
+    for contour in contours:
+        if cv2.contourArea(contour)>maxArea:
+            maxArea=cv2.contourArea(contour)
+    for contour in contours:
+        # get rectangle bounding contour
+        [x, y, w, h] = cv2.boundingRect(contour)
+        area = cv2.contourArea(contour)
+        print(area)
+        # Don't plot small false positives that aren't text
+        if area < maxArea:
+            continue
+        print(1)
+        # draw rectangle around contour on original image
+        cv2.rectangle(img, (x+ maxi[1], y+ maxi[0]), (x + w+ maxi[1], y + h+ maxi[0]), (255, 0, 0), 4)
+        result=imag[y+ maxi[0]:y+ maxi[0]+h,x+ maxi[1]:x+ maxi[1]+w]
+        show_images([img],["lalolo"])
 
-    print(starti, endi)
-    show_images([ret], ["orginal"])
-    # return filtered, 0
-    return filtered, img
+
+
+    return result, img
