@@ -1,0 +1,33 @@
+import numpy as np
+import cv2
+import skimage.io as io
+from skimage.color import rgb2gray
+from scipy.signal import convolve2d
+import matplotlib.pyplot as plt
+from scipy import signal as sig
+from scipy.ndimage import gaussian_filter
+from commonfunctions import *
+
+def MORPHOLOGICAL_Detection(img):
+    img = rgb2gray(img)
+    # Vertical edges detection =>
+    fx = np.array([[-1, 0, 1], [-1, 0, 2], [-1, 0, 1]])# why 1 ?
+    fy = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
+    #img_veritcal = sig.convolve2d(img, fx)
+    img=img*255
+
+    img_veritcal=sobel_v(img)
+    imgX = canny(img, sigma=1, low_threshold=50, high_threshold=130)
+    img_veritcal[img_veritcal>0]=1
+    img_veritcal[img_veritcal <0 ] = 0
+    Row_Histogram=[]
+    for row in img_veritcal:
+        Row_Histogram.append(np.sum(row))
+    print(Row_Histogram)
+
+    print(img_veritcal)
+
+    show_images([img,img_veritcal,imgX])
+
+TEST_img = io.imread("../03-Dataset/xx.png")
+MORPHOLOGICAL_Detection(TEST_img)

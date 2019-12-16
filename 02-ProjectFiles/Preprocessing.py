@@ -40,7 +40,7 @@ def MorhOperations(img):
     return x
 
 
-def extractImages(pathIn):
+def extractImages(pathIn,IsRotated):
     count = 0
     vidcap = cv2.VideoCapture(pathIn)
     success, image = vidcap.read()
@@ -53,7 +53,8 @@ def extractImages(pathIn):
         #   print('Read a new frame: ', success)
         if success == 0:
             break
-        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        if IsRotated:
+            image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 
         #   cv2.ipmwrite("../03-Dataset/frames/"+"frame%d.jpg" %
         #          count, image)     # save frame as JPEG file

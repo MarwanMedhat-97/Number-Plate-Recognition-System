@@ -40,7 +40,7 @@ def MorhOperations(img):
     return x
 
 
-def extractImages(pathIn):
+def extractImages(pathIn,IsRotated):
     count = 0
     vidcap = cv2.VideoCapture(pathIn)
     success, image = vidcap.read()
@@ -53,7 +53,8 @@ def extractImages(pathIn):
         #   print('Read a new frame: ', success)
         if success == 0:
             break
-        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        if IsRotated:
+            image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 
         #   cv2.ipmwrite("../03-Dataset/frames/"+"frame%d.jpg" %
         #          count, image)     # save frame as JPEG file
@@ -67,129 +68,6 @@ def GammaCorrection(image, c, gamma):
     imageGamma = np.array(image)
     image = c * np.power(imageGamma, gamma)
     return image
-
-
-def Harris(img, ShowSteps):
-    # Preprocessing on frame=>
-    orginal_img = np.copy(img)
-    image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    GrayLevel = np.copy(image)
-    image = cv2.bilateralFilter(image, 11, 17, 17)
-    # equ = cv2.equalizeHist(image)
-
-    # image = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-    # sat = cv2.medianBlur(image, ksize=3)
-    sat = np.copy(image)
-    # sat = gaussian_filter(sat , sigma=1)
-    GlobalThresh = threshold_otsu(sat)
-    ThreshImage = np.copy(sat)
-    ThreshImage[sat >= GlobalThresh] = 1
-    ThreshImage[sat < GlobalThresh] = 0
-    # ThreshImage = cv2.medianBlur(ThreshImage, ksize=3)
-    # ThreshImage = GammaCorrection(ThreshImage, 1, 3)
-    if ShowSteps:
-        show_images([sat, ThreshImage, GrayLevel], ["Image before Harris ", "Binary Image", "gray?"])
-    # ----------------------------------------------------------------------------------------
-
-    dst = my_cornerHarris(ThreshImage)
-    dst = cv2.morphologyEx(dst, op=cv2.MORPH_CLOSE, kernel=cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3)),
-                           iterations=3)
-    if ShowSteps:
-        show_images([dst])
-    imag = np.copy(img)
-    arr = ((dst > 0.1 * dst.max()) & (image > 150))
-    if ShowSteps:
-        show_images([arr])
-    CurrMax = -1
-    maxi = [0, 0]
-    wx = int(arr.shape[0] / 10.5)
-    wy = int(arr.shape[1] / 3)
-    ListPlates = []
-    ThreshImage = 1 - ThreshImage
-    for i in range(arr.shape[0] - 1, 0 + wx, -int(wx / 3)):  # tool
-        # if (i < int(arr.shape[0] / 2)):
-        #   break
-        for j in range(arr.shape[1] - 1, 0 + wy, -int(wy / 3)):  # 3ard
-
-            if (np.sum(arr[i - wx:i, j - wy:j])) > CurrMax:
-
-                contours, hierarchy = cv2.findContours(ThreshImage[i - wx:i, j - wy:j], cv2.RETR_TREE,
-                                                       cv2.CHAIN_APPROX_SIMPLE)
-                MIN_PIXEL_WIDTH = 1
-                MIN_PIXEL_HEIGHT = 2
-
-                MIN_ASPECT_RATIO = 0.25
-                MAX_ASPECT_RATIO = 1.0
-
-                MIN_PIXEL_AREA = 10
-
-                #  print(len(contours))
-                index = 0
-                countValidChar = 0
-                # show_images([ThreshImage[i - wx:i, j - wy:j]])
-                for cnt in contours:
-                    x, y, w, h = cv2.boundingRect(cnt)
-                    # print(x, y, w, h, cv2.contourArea(cnt))
-                    print(w * h, w, h)
-                    if 50 > w * h > MIN_PIXEL_AREA and w > MIN_PIXEL_WIDTH and h > MIN_PIXEL_HEIGHT and MIN_ASPECT_RATIO < float(
-                            w) / float(h) and float(w) / float(h) < MAX_ASPECT_RATIO:
-                        countValidChar += 1
-                print(countValidChar)
-            #  if countValidChar < 4:
-            #  continue
-
-            CurrMax = np.sum(arr[i - wx:i, j - wy:j])
-            maxi[0] = i - wx
-            maxi[1] = j - wy
-            ListPlates.append([i - wx, j - wy, CurrMax])
-
-    # Preprocessing on The plate =>
-
-    ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
-    print(maxi[0], maxi[1])
-    show_images([imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]])
-    # return ret, imag
-    #    imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
-    imageret = np.copy(ret)
-    start, end = 1, 1
-    # print(imageret.shape)
-    starti, endi = 1, 1
-    # show_images([imageret], ["lol"])
-    for i in range(imageret.shape[1] - int(0.15 * imageret.shape[1]) - 1):
-        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]),
-                       i:i + int(0.15 * imageret.shape[1])])) > 100:
-            start = i
-        break
-
-    for i in range(imageret.shape[1], int(0.15 * imageret.shape[1]), -1):
-        if np.average((imageret[int(0.5 * imageret.shape[0]):int(0.8 * imageret.shape[0]),
-                       i - int(0.15 * imageret.shape[1]):i])) > 100:
-            end = i
-            break
-    filtered = imageret[:, start:end]
-    # show_images([filtered])
-    for i in range(filtered.shape[0] - int(0.3 * filtered.shape[0])):
-        if np.average((filtered[i:i + int(0.3 * filtered.shape[0]), :])) > 120:
-            starti = i
-            break
-
-    for i in range(filtered.shape[0], int(0.3 * filtered.shape[0]), -1):
-        if np.average((filtered[i - int(0.3 * filtered.shape[0]):i, :])) > 120:
-            endi = i
-        break
-    # print(starti, endi, "XD")
-    filtered = ret[starti:endi, start:end]
-    # print(start, end, starti, endi)
-    # print(maxi[0], maxi[1], wx, wy)
-    cv2.rectangle(img, (start + maxi[1], starti + maxi[0]), (maxi[1] + end, maxi[0] + endi), (255, 0, 0), 4)
-
-    #  print(starti, endi)
-    if ShowSteps:
-        show_images([ret], ["orginal"])
-    # return filtered, 0
-    return filtered, img
-
-
 
 def my_cornerHarris(Orignal_img):
     img = rgb2gray(Orignal_img)
@@ -210,16 +88,19 @@ def my_cornerHarris(Orignal_img):
 
 def Working_Harris(img, Steps):
     image = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+   # image=GammaCorrection(image,1.1,2)
     image = cv2.bilateralFilter(image, 11, 17, 17)
     # image = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
     sat = cv2.medianBlur(image, ksize=3)
     show_images([sat], ["After preprocessing"])
+    if Steps:
+        show_images([sat], ["After preprocessing"])
     GlobalThresh = threshold_otsu(sat)
     ThreshImage = np.copy(sat)
     ThreshImage[sat >= GlobalThresh] = 1
     ThreshImage[sat < GlobalThresh] = 0
     ThreshImage = cv2.medianBlur(ThreshImage, ksize=3)
-    # sat=GammaCorrection(image,1,10)
+    #sat=GammaCorrection(image,1,10)
     #show_images([sat, ThreshImage])
     # dst = cv2.cornerHarris(sat, 20, 5, 0.12)
     dst = my_cornerHarris(sat)
@@ -259,14 +140,17 @@ def Working_Harris(img, Steps):
         return img, img
     ret = imag[maxi[0]:maxi[0] + wx, maxi[1]:maxi[1] + wy]
     imageret = cv2.cvtColor(ret, cv2.COLOR_RGB2GRAY)
-    show_images([imageret], ["lol"])
+    if Steps:
+        show_images([imageret], ["lol"])
     ret, new_img = cv2.threshold(imageret, 150, 255, cv2.THRESH_BINARY_INV)  # for black text , cv.THRESH_BINARY_INV
-    show_images([new_img], ["After Thresholding"])
+    if Steps:
+        show_images([new_img], ["After Thresholding"])
 
     kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (4,3))
     dilated = cv2.erode(new_img, kernel, iterations=5)
     dilated=255-dilated
-    show_images([dilated], ["After Dilation"])
+    if Steps:
+        show_images([dilated], ["After Dilation"])
     contours, hierarchy = cv2.findContours(dilated,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
     result=np.copy(img)
     maxArea=-1
@@ -280,7 +164,8 @@ def Working_Harris(img, Steps):
             continue
         cv2.rectangle(img, (x+ maxi[1], y+ maxi[0]), (x + w+ maxi[1], y + h+ maxi[0]), (255, 0, 0), 4)
         result=imag[y+ maxi[0]:y+ maxi[0]+h,x+ maxi[1]:x+ maxi[1]+w]
-        show_images([img],["Bounding Box(s)"])
+        if Steps:
+            show_images([img],["Bounding Box(s)"])
 
 
 
